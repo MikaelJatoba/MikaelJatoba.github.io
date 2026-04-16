@@ -54,29 +54,43 @@ function criarDesenhista(canvasId) {
     }
     
     function ajustarEscala(pontos) {
-        if (pontos.length === 0) return;
-        
-        let xs = pontos.map(p => p.x);
-        let ys = pontos.map(p => p.y);
-        
-        let minX = Math.min(...xs);
-        let maxX = Math.max(...xs);
-        let minY = Math.min(...ys);
-        let maxY = Math.max(...ys);
-        
-        let rangeX = maxX - minX;
-        let rangeY = maxY - minY;
-        
-        if (rangeX < 0.001) rangeX = 2;
-        if (rangeY < 0.001) rangeY = 2;
-        
-        let maxRange = Math.max(rangeX, rangeY);
-        ESCALA = Math.min(200 / maxRange, 50);
-        ESCALA = Math.max(ESCALA, 5);
-        
-        OFFSET_X = (minX + maxX) / 2;
-        OFFSET_Y = (minY + maxY) / 2;
-    }
+    if (pontos.length === 0) return;
+    
+    let xs = pontos.map(p => p.x);
+    let ys = pontos.map(p => p.y);
+    
+    let minX = Math.min(...xs);
+    let maxX = Math.max(...xs);
+    let minY = Math.min(...ys);
+    let maxY = Math.max(...ys);
+    
+    let rangeX = maxX - minX;
+    let rangeY = maxY - minY;
+    
+    if (rangeX < 0.001) rangeX = 2;
+    if (rangeY < 0.001) rangeY = 2;
+    
+    // Adiciona uma margem de 20% para os pontos não ficarem colados nas bordas
+    minX = minX - rangeX * 0.2;
+    maxX = maxX + rangeX * 0.2;
+    minY = minY - rangeY * 0.2;
+    maxY = maxY + rangeY * 0.2;
+    
+    rangeX = maxX - minX;
+    rangeY = maxY - minY;
+    
+    let maxRange = Math.max(rangeX, rangeY);
+    
+    // Calcula a escala ideal para caber na tela (500px / 2 = 250px para cada lado)
+    ESCALA = 250 / (maxRange / 2);
+    
+    // Limita a escala para não ficar muito pequena (zoom out) nem muito grande (zoom in)
+    ESCALA = Math.min(ESCALA, 100);
+    ESCALA = Math.max(ESCALA, 2);
+    
+    OFFSET_X = (minX + maxX) / 2;
+    OFFSET_Y = (minY + maxY) / 2;
+}   
     
     function desenharPlanoDeFundo() {
         pincel.clearRect(0, 0, 500, 500);
