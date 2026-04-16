@@ -61,24 +61,23 @@ function criarDesenhista(canvasId) {
         let minY = Math.min(...ys);
         let maxY = Math.max(...ys);
         
+        let margemX = Math.max((maxX - minX) * 0.25, 1);
+        let margemY = Math.max((maxY - minY) * 0.25, 1);
+        
+        minX = minX - margemX;
+        maxX = maxX + margemX;
+        minY = minY - margemY;
+        maxY = maxY + margemY;
+        
         let rangeX = maxX - minX;
         let rangeY = maxY - minY;
         
-        if (rangeX < 0.001) rangeX = 2;
-        if (rangeY < 0.001) rangeY = 2;
+        let escalaX = 400 / rangeX;
+        let escalaY = 400 / rangeY;
         
-        minX = minX - rangeX * 0.2;
-        maxX = maxX + rangeX * 0.2;
-        minY = minY - rangeY * 0.2;
-        maxY = maxY + rangeY * 0.2;
-        
-        rangeX = maxX - minX;
-        rangeY = maxY - minY;
-        
-        let maxRange = Math.max(rangeX, rangeY);
-        ESCALA = 250 / (maxRange / 2);
-        ESCALA = Math.min(ESCALA, 100);
-        ESCALA = Math.max(ESCALA, 2);
+        ESCALA = Math.min(escalaX, escalaY);
+        ESCALA = Math.min(ESCALA, 200);
+        ESCALA = Math.max(ESCALA, 0.5);
         
         OFFSET_X = (minX + maxX) / 2;
         OFFSET_Y = (minY + maxY) / 2;
